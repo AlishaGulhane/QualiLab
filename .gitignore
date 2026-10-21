@@ -1,0 +1,56 @@
+
+# Environment variables and secrets
+.env
+.env.*
+!.env.example
+
+# Python virtual environments
+venv/
+.venv/
+backend/venv/
+backend/.venv/
+
+# Python cache and compiled files
+__pycache__/
+*.py[cod]
+
+# Frontend dependencies
+node_modules/
+
+# Logs
+*.log
+
+# IDE and OS files
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+.env
+.env.*
+!.env.example
+backend/.env 
+
+#extra
+@'
+.env
+.env.*
+!.env.example
+**/.env
+*.pem
+*.ppk
+*.pyc
+__pycache__/
+**/__MACOSX/
+.DS_Store
+*.exe
+backend-build.zip
+frontend-build.zip
+test_out*.pdf
+'@ | Add-Content .gitignore
+backend/local_db.json
+frontend/js/config.development.js
+frontend/js/config.js
+frontend/js/config.production.js
+frontend/runtime-config.js
+backend/.env.example
+test_i.pdf

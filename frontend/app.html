@@ -1,0 +1,636 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ethosh QualiLabs QC Tool</title>
+    <link rel="icon" href="data:,">
+    <link rel="stylesheet" href="css/main.css?v=20260723_v2">
+    <link rel="stylesheet" href="css/theme.css?v=20260723_v2">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        .feedback-card { border-left: 4px solid #2B318D; border-radius: 14px; padding: 0; overflow: hidden; box-shadow: 0 2px 8px rgba(43,49,141,0.06); }
+        .feedback-header { display: flex; align-items: center; gap: 14px; padding: 20px 24px 0 24px; }
+        .feedback-icon { width: 40px; height: 40px; border-radius: 10px; background: linear-gradient(135deg,#eef2ff,#e0e7ff); color: #2B318D; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+        .feedback-title { font-size: 1rem; font-weight: 700; color: #1e2875; margin: 0; }
+        .feedback-subtitle { font-size: 0.8rem; color: #94a3b8; margin: 2px 0 0 0; }
+        .feedback-body { padding: 16px 24px 24px 24px; }
+        .star-rating { display: flex; gap: 6px; margin: 12px 0; }
+        .star-rating .star { font-size: 2rem; color: #d1d5db; cursor: pointer; transition: all 0.15s; user-select: none; line-height: 1; }
+        .star-rating .star.active,
+        .star-rating .star.hover { color: #f59e0b; text-shadow: 0 0 8px rgba(245,158,11,0.3); transform: scale(1.1); }
+        .star-rating .star:hover { transform: scale(1.2); }
+        .feedback-comment { width: 100%; border: 1px solid #e2e8f0; border-radius: 10px; padding: 12px 14px; font-size: 0.85rem; font-family: inherit; resize: vertical; min-height: 60px; transition: border-color 0.15s; box-sizing: border-box; }
+        .feedback-comment:focus { outline: none; border-color: #2B318D; box-shadow: 0 0 0 3px rgba(43,49,141,0.1); }
+        .feedback-actions { display: flex; gap: 10px; margin-top: 14px; }
+        .btn-feedback { padding: 10px 24px; border-radius: 10px; font-size: 0.85rem; font-weight: 600; cursor: pointer; border: none; transition: all 0.15s; }
+        .btn-feedback-primary { background: linear-gradient(135deg,#2B318D,#3b40a0); color: #fff; box-shadow: 0 2px 8px rgba(43,49,141,0.2); }
+        .btn-feedback-primary:hover { transform: translateY(-1px); box-shadow: 0 4px 14px rgba(43,49,141,0.3); }
+        .btn-feedback-primary:active { transform: scale(0.97); }
+        .btn-feedback-primary:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+        .btn-feedback-ghost { background: transparent; color: #64748b; border: 1px solid #e2e8f0; }
+        .btn-feedback-ghost:hover { background: #f8fafc; border-color: #cbd5e1; color: #334155; }
+        .feedback-thanks { text-align: center; padding: 20px 0; }
+        .feedback-thanks-icon { margin-bottom: 10px; animation: feedbackPop 0.4s ease; }
+        .feedback-thanks-text { font-size: 1.1rem; font-weight: 600; color: #16a34a; margin: 0; }
+        @keyframes feedbackPop { 0% { transform: scale(0); opacity: 0; } 60% { transform: scale(1.15); } 100% { transform: scale(1); opacity: 1; } }
+        .auth-header-nav { display: none; align-items: center; gap: 12px; position: absolute; top: 20px; right: 24px; background: #fff; padding: 6px 6px 6px 16px; border-radius: 12px; border: 1px solid #e2e8f0; box-shadow: 0 4px 16px rgba(0,0,0,0.06); }
+        .auth-user-badge { font-size: 0.85rem; font-weight: 600; color: #1e2875; white-space: nowrap; }
+        .auth-user-badge a { color: #6366f1; text-decoration: none; font-weight: 500; }
+        .auth-user-badge a:hover { text-decoration: underline; }
+        .auth-logout-btn { background: transparent; color: #94a3b8; border: 1px solid #e2e8f0; border-radius: 8px; padding: 6px 14px; font-size: 0.8rem; font-weight: 500; cursor: pointer; transition: all 0.15s; }
+        .auth-logout-btn:hover { background: #fef2f2; border-color: #fecaca; color: #dc2626; }
+
+        /* Top Navigation Tabs Header Centering & Equal Dimensions */
+        .app-nav-tabs-wrapper { display: flex; justify-content: center; align-items: center; width: 100%; margin: 20px auto 4px auto; position: relative; z-index: 10; }
+        .app-nav-tabs { display: inline-flex; align-items: center; justify-content: center; gap: 8px; background: #ffffff; border: 1px solid #e2e8f0; border-radius: 9999px; padding: 6px 8px; box-shadow: 0 4px 14px rgba(0, 0, 0, 0.05); }
+        .nav-tab-btn { display: inline-flex; align-items: center; justify-content: center; gap: 10px; width: 175px; min-width: 175px; max-width: 175px; height: 44px; padding: 0 16px; font-size: 0.95rem; font-weight: 600; color: #cbd5e1; background: transparent; border: none; border-radius: 9999px; cursor: pointer; transition: all 0.18s cubic-bezier(0.4, 0, 0.2, 1); outline: none; user-select: none; box-sizing: border-box; white-space: nowrap; }
+        .nav-tab-btn svg { stroke: #22c55e; flex-shrink: 0; }
+        .nav-tab-btn:hover { color: #64748b; background: rgba(0, 0, 0, 0.02); }
+        .nav-tab-btn.active { color: #ffffff !important; background: #141414 !important; font-weight: 700; border-radius: 9999px; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.24); }
+        .nav-tab-btn.active svg { stroke: #22c55e !important; }
+
+        /* Error Category Tabs Styling */
+        .error-category-tabs-wrapper { margin: 12px 0 16px 0; width: 100%; }
+        .error-category-tabs { display: flex; flex-wrap: wrap; gap: 6px; padding: 4px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; }
+        .error-tab-btn { display: inline-flex; align-items: center; justify-content: center; gap: 6px; padding: 6px 12px; font-size: 0.78rem; font-weight: 600; color: #64748b; background: transparent; border: none; border-radius: 6px; cursor: pointer; transition: all 0.15s ease; outline: none; }
+        .error-tab-btn:hover { color: #1e293b; background: rgba(0, 0, 0, 0.04); }
+        .error-tab-btn.active { color: #ffffff; background: #1e2875; box-shadow: 0 1px 4px rgba(30, 40, 117, 0.25); }
+        .error-tab-btn.active .error-tab-count { background: rgba(255, 255, 255, 0.25); color: #ffffff; }
+        .error-tab-count { display: inline-flex; align-items: center; justify-content: center; min-width: 18px; height: 18px; padding: 0 5px; font-size: 0.7rem; font-weight: 700; border-radius: 9999px; background: #e2e8f0; color: #475569; }
+    </style>
+
+    <!-- Runtime configuration: loaded from the same origin as this static site (S3/local dev). -->
+    <!-- Sets window.APP_CONFIG (e.g., API_BASE_URL) before the main module loads. -->
+    <script src="runtime-config.js?v=20260723"></script>
+</head>
+
+<body>
+    <!-- Header Section -->
+    <div class="header-container">
+        <div class="logo-section">
+            <div class="logo-text">
+                <img src="logo/dark-logo.svg" alt="Ethosh logo" class="logo-img">
+            </div>
+        </div>
+        <h1 class="main-title">QualiLabs QC Tool</h1>
+        <p class="subtitle">Automated compliance, spelling, and design validation tool</p>
+
+        <!-- Top Navigation Tabs (Capsule Bar matching UI specification) -->
+        <div class="app-nav-tabs-wrapper">
+            <nav class="app-nav-tabs" id="app-nav-tabs">
+                <button class="nav-tab-btn active" data-tab="qc-tool-view" id="nav-tab-qc">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg>
+                    <span>QC Validation</span>
+                </button>
+                <button class="nav-tab-btn" data-tab="history-view" id="nav-tab-history">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/><path d="M12 7v5l3 2"/></svg>
+                    <span>History</span>
+                </button>
+                <button class="nav-tab-btn" data-tab="dictionary-view" id="nav-tab-dictionary">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect width="16" height="18" x="4" y="3" rx="2"/><path d="M8 3v6l2-2 2 2V3"/></svg>
+                    <span>My Dictionary</span>
+                </button>
+            </nav>
+        </div>
+
+        <div class="auth-header-nav" id="auth-header-nav">
+            <span class="auth-user-badge" id="auth-user-badge"></span>
+            <button id="header-logout-btn" class="auth-logout-btn">Sign Out</button>
+        </div>
+    </div>
+
+    <!-- Main QC Tool Container (Tab 1) -->
+    <div id="qc-tool-view" class="app-tab-panel">
+    <div class="main-container">
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Project Setup -->
+            <div class="css-card">
+                <div class="section-header">Project Setup</div>
+                <div class="upload-grid">
+                    <div>
+                        <label for="brand-select"><strong>1. Select Brand Guidelines</strong></label>
+                        <select id="brand-select" class="input-field" title="Brand guidelines" aria-label="Brand guidelines">
+                            <option value="Ethosh" selected>Ethosh</option>
+                            <option value="Biorad">Bio-Rad (uses Ethosh guidelines)</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="file-upload"><strong>2. Upload PDF / Image (up to 5 documents)</strong></label>
+                        <input type="file" id="file-upload" multiple accept="application/pdf,image/*,.docx,.txt,.xml,.csv" class="file-input" title="Upload up to 5 PDF or image files" aria-label="Upload up to 5 PDF or image files">
+                        <div id="selected-files-container" class="selected-files-container" style="display:none; margin-top:8px;">
+                            <div class="selected-files-header" style="display:flex; justify-content:space-between; align-items:center; font-size:0.8rem; color:#64748b; margin-bottom:4px;">
+                                <span id="selected-files-count">0 of 5 documents selected</span>
+                                <button type="button" id="clear-selected-files-btn" style="background:none; border:none; color:#ef4444; font-size:0.75rem; cursor:pointer; padding:0;">Clear All</button>
+                            </div>
+                            <div id="selected-files-list" class="selected-files-list"></div>
+                        </div>
+                    </div>
+                    <div>
+                        <label for="content-type-select"><strong>3. Document Content</strong></label>
+                        <select id="content-type-select" class="input-field" title="Document content type" aria-label="Document content type">
+                            <option value="text" selected>Text Only</option>
+                            <option value="hybrid">Images Only</option>
+                            <option value="image">Text + Images </option>
+                        </select>
+                    </div>
+                </div>
+                <div id="upload-status" class="upload-status"></div>
+
+                <!-- 4 Independent Validation Category Toggles (All ON by default) -->
+                <div id="qc-category-toggles" class="qc-category-toggles">
+                    <div class="qc-toggles-header">
+                        <span class="qc-toggles-title">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                            Validation Categories
+                        </span>
+                        <span class="qc-toggles-hint">Active checks applied during validation</span>
+                    </div>
+                    <div class="qc-toggles-grid">
+                        <div class="qc-toggle-item">
+                            <span class="qc-toggle-label">1. Spell Check</span>
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="toggle-check-spelling" checked title="Toggle Spell Check" aria-label="Toggle Spell Check">
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+                        <div class="qc-toggle-item">
+                            <span class="qc-toggle-label">2. Capitalisation</span>
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="toggle-check-capitalization" checked title="Toggle Capitalisation" aria-label="Toggle Capitalisation">
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+                        <div class="qc-toggle-item">
+                            <span class="qc-toggle-label">3. Punctuation</span>
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="toggle-check-punctuation" checked title="Toggle Punctuation" aria-label="Toggle Punctuation">
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+                        <div class="qc-toggle-item">
+                            <span class="qc-toggle-label">4. Grammar</span>
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="toggle-check-grammar" checked title="Toggle Grammar" aria-label="Toggle Grammar">
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Status and Controls: merged into Project Setup per reference layout -->
+                <div id="status-section">
+                    <div id="status-text" class="status-text"></div>
+                    <div id="loader" class="loader" style="display:none;">
+                        <div class="scan-illustration">
+                            <svg class="scan-svg" viewBox="0 0 96 116" xmlns="http://www.w3.org/2000/svg">
+                                <rect class="scan-doc" x="6" y="2" width="84" height="104" rx="8"></rect>
+                                <line class="scan-line-text l1" x1="18" y1="22" x2="74" y2="22"></line>
+                                <line class="scan-line-text l2" x1="18" y1="38" x2="66" y2="38"></line>
+                                <line class="scan-line-text l3" x1="18" y1="54" x2="74" y2="54"></line>
+                                <line class="scan-line-text l4" x1="18" y1="70" x2="58" y2="70"></line>
+                                <line class="scan-line-text l5" x1="18" y1="86" x2="70" y2="86"></line>
+                                <rect class="scan-beam" x="6" y="2" width="84" height="5" rx="2.5"></rect>
+                                <circle class="scan-dot dot1" cx="30" cy="112" r="3"></circle>
+                                <circle class="scan-dot dot2" cx="48" cy="112" r="3"></circle>
+                                <circle class="scan-dot dot3" cx="66" cy="112" r="3"></circle>
+                            </svg>
+                        </div>
+                        <span>Scanning document...</span>
+                    </div>
+                    <div id="validation-progress" class="validation-progress" style="display:none;">
+                        <div class="progress-container">
+                            <div id="progress-bar" class="progress-bar" style="width:0%"></div>
+                        </div>
+                        <div id="progress-text" class="progress-text">0%</div>
+                    </div>
+                    <!-- Single error notification — shown right above the action buttons
+                         (validation errors, upload errors, API failures) instead of scattered
+                         inline banners or native alert() popups. -->
+                    <div id="error-toast" class="error-toast" role="alert">
+                        <button id="error-toast-close" class="error-toast-close" aria-label="Dismiss error">&times;</button>
+                        <div class="error-toast-icon">
+                            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <circle cx="12" cy="12" r="11" fill="#fff"/>
+                                <rect x="11" y="6" width="2" height="8" rx="1" fill="#f43f5e"/>
+                                <rect x="11" y="16" width="2" height="2" rx="1" fill="#f43f5e"/>
+                            </svg>
+                        </div>
+                        <p class="error-toast-message"><strong>Error!</strong> <span id="error-toast-text"></span></p>
+                    </div>
+
+                    <div class="button-group">
+                        <button id="run-validation-btn" class="btn btn-primary">Run Validation</button>
+                        <button id="cancel-validation-btn" class="btn btn-secondary" style="display:none;">Cancel Validation</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Batch Processing Section: parallel execution for up to 5 documents -->
+            <div id="batch-section" style="display:none;" class="css-card">
+                <div class="section-header" style="display:flex; justify-content:space-between; align-items:center;">
+                    <span>Batch Document Validation</span>
+                    <span id="batch-overall-badge" class="batch-overall-badge" style="font-size:0.8rem; padding:4px 10px; border-radius:12px; font-weight:600; background:#e0e7ff; color:#3730a3;">Concurrent Batch</span>
+                </div>
+                <div class="batch-info" style="margin-bottom:14px; font-size:0.875rem;">
+                    <strong>Validated <span id="batch-current">0</span> of <span id="batch-total">0</span> documents concurrently</strong>
+                    <div id="batch-overall-progress" style="margin-top:8px; height:6px; background:#e2e8f0; border-radius:3px; overflow:hidden;">
+                        <div id="batch-overall-bar" style="width:0%; height:100%; background:linear-gradient(90deg, #4f46e5, #06b6d4); transition:width 0.3s;"></div>
+                    </div>
+                </div>
+                <div id="batch-progress-list" class="batch-progress-list"></div>
+                <div class="batch-actions" style="margin-top: 16px; display:flex; gap:10px; justify-content:flex-end;">
+                    <button id="batch-cancel-btn" class="btn btn-secondary">Cancel All</button>
+                    <button id="batch-download-all-btn" class="btn btn-download" style="display:none;">Download All Results</button>
+                </div>
+            </div>
+
+            <!-- Validation Results -->
+            <div id="results-section" style="display:none;" class="css-card">
+                <div class="section-header">Validation Results</div>
+                <div class="issues-overview">
+                    <div class="metric-card metric-total">
+                        <div class="metric-label">Total Issues</div>
+                        <div id="result-issues" class="metric-value">0</div>
+                    </div>
+                    <div class="sub-metrics-row">
+                        <div class="metric-card metric-sub">
+                            <div class="metric-label">Spelling Mistakes</div>
+                            <div id="result-spelling" class="metric-value-sub">0/0</div>
+                        </div>
+                        <div class="metric-card metric-sub">
+                            <div class="metric-label">Grammar Mistakes</div>
+                            <div id="result-grammar" class="metric-value-sub">0</div>
+                        </div>
+                        <div class="metric-card metric-sub">
+                            <div class="metric-label">Formatting</div>
+                            <div id="result-formatting" class="metric-value-sub">0</div>
+                        </div>
+                    </div>
+                </div>
+                <div id="result-message" class="result-message"></div>
+            </div>
+
+            <!-- Zone Detection: appears once validation completes; results
+                 reuse the zone data already fetched at upload time and only
+                 render when the toggle is switched on. -->
+            <div id="zones-section" style="display:none;" class="css-card">
+                <div class="section-header">
+                    <span>Zone Detection</span>
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="zones-toggle" title="Show detected zones" aria-label="Show detected zones">
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+                <p id="zones-toggle-hint" class="zones-toggle-hint">Switch on to view detected text/image zones per page.</p>
+                <div id="zone-previews" class="zone-previews"></div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Audit Log: annotated preview (left) + compact settings/results cards (right).
+         Hidden until validation completes (only Project Setup shows on load). -->
+    <section id="audit-log-section" class="audit-log-section" style="display:none;">
+        <h2 class="section-header audit-log-title">Audit Log</h2>
+
+        <!-- Batch Document Switcher Bar -->
+        <div id="batch-doc-switcher" class="batch-doc-switcher" style="display:none; margin-bottom:16px; padding:10px 14px; background:var(--card-light); border:1px solid var(--border-light); border-radius:10px;">
+            <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px;">
+                <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
+                    <span style="font-size:0.8rem; font-weight:700; color:var(--text-muted, #64748b);">BATCH DOCUMENTS:</span>
+                    <div id="batch-doc-tabs" class="batch-doc-tabs" style="display:flex; gap:8px; flex-wrap:wrap;"></div>
+                </div>
+                <button type="button" id="batch-back-to-list-btn" class="btn btn-secondary" style="padding:4px 10px; font-size:0.8rem;">Batch Overview</button>
+            </div>
+        </div>
+
+        <div class="audit-log-grid">
+            <!-- Annotated Preview -->
+            <div id="preview-section" style="display:none;" class="css-card">
+                <div class="section-header">Annotated PDF Preview</div>
+                <div id="annotated-previews"></div>
+                <div class="download-section">
+                    <button id="download-pdf-btn" class="btn btn-download">Download Annotated PDF</button>
+                    <button id="download-legend-btn" class="btn btn-download"
+                        style="display:none; margin-left:8px;">Download Legend PDF</button>
+                    <!-- Download JSON button commented out per UI change request
+                    <button id="download-json-btn" class="btn btn-download">Download report JSON</button>
+                    -->
+                </div>
+            </div>
+
+            <!-- Small stacked cards -->
+            <aside class="sidebar audit-log-sidebar">
+                <!-- Theme toggle removed: app is now light-mode only.
+                <button id="theme-toggle" class="theme-btn">Light Mode</button>
+                -->
+
+                <div class="sidebar-section">
+                    <h3>Spell Check Settings</h3>
+                    <label class="checkbox-label">
+                        <input type="checkbox" id="spell-enabled" checked title="Enable spell checking" aria-label="Enable spell checking">
+                        <span>Enable spell checking</span>
+                    </label>
+
+                    <label class="checkbox-label">
+                        <input type="checkbox" id="title-case-enabled" checked title="Enable title case detection" aria-label="Enable title case detection">
+                        <span>Enable title case detection</span>
+                    </label>
+
+                    <!-- User prompt moved to upload workflow; prefer hybrid OCR is now read from #content-type-select -->
+                    <!--
+                    <label class="checkbox-label">
+                        <input type="checkbox" id="run-pdf-ocr">
+                        <span>Run OCR on PDF (hybrid: text + image)</span>
+                    </label>
+                    -->
+
+                    <label for="spell-language">Dictionary:</label>
+                    <select id="spell-language" class="input-field" title="Dictionary language" aria-label="Dictionary language">
+                        <option value="en-US">English - American</option>
+                        <option value="en-GB">English - UK</option>
+                    </select>
+                </div>
+
+                <!-- Error Category Tabs -->
+                <div class="error-category-tabs-wrapper" id="error-category-tabs-wrapper">
+                    <div class="error-category-tabs" id="error-category-tabs" role="tablist" aria-label="Error Categories">
+                        <button type="button" class="error-tab-btn active" data-category="all" id="error-tab-all" role="tab" aria-selected="true" title="Show all categories">
+                            <span>All</span>
+                            <span class="error-tab-count" id="error-count-all">0</span>
+                        </button>
+                        <button type="button" class="error-tab-btn" data-category="spelling" id="error-tab-spelling" role="tab" aria-selected="false" title="Show spelling mistakes only">
+                            <span>Spelling</span>
+                            <span class="error-tab-count" id="error-count-spelling">0</span>
+                        </button>
+                        <button type="button" class="error-tab-btn" data-category="grammar" id="error-tab-grammar" role="tab" aria-selected="false" title="Show grammar & punctuation only">
+                            <span>Grammar &amp; Punctuation</span>
+                            <span class="error-tab-count" id="error-count-grammar">0</span>
+                        </button>
+                        <button type="button" class="error-tab-btn" data-category="case" id="error-tab-case" role="tab" aria-selected="false" title="Show case & title violations only">
+                            <span>Case &amp; Title</span>
+                            <span class="error-tab-count" id="error-count-case">0</span>
+                        </button>
+                        <button type="button" class="error-tab-btn" data-category="formatting" id="error-tab-formatting" role="tab" aria-selected="false" title="Show spacing & formatting only">
+                            <span>Spacing &amp; Formatting</span>
+                            <span class="error-tab-count" id="error-count-formatting">0</span>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="sidebar-section" id="spelling-mistakes-section">
+                    <h3>Spelling Mistakes:</h3>
+                    <div id="spelling-issues-list">
+                        <p class="info-text">No issues detected yet</p>
+                    </div>
+                </div>
+
+                <div class="sidebar-section" id="grammar-issues-section">
+                    <h3>Grammar &amp; Punctuation:</h3>
+                    <div id="grammar-issues-list">
+                        <p class="info-text">No issues detected yet</p>
+                    </div>
+                </div>
+
+                <div class="sidebar-section" id="case-violations-section">
+                    <h3>Case &amp; Title Violations:</h3>
+                    <div id="case-violations-list">
+                        <p class="info-text">No issues detected yet</p>
+                    </div>
+                </div>
+
+                <div class="sidebar-section" id="formatting-issues-section">
+                    <h3>Spacing &amp; Formatting:</h3>
+                    <div id="formatting-issues-list">
+                        <p class="info-text">No issues detected yet</p>
+                    </div>
+                </div>
+
+                <div class="sidebar-section" id="font-explorer-section">
+                    <h3>Font Explorer</h3>
+                    <div id="font-explorer">
+                        <p class="info-text">Upload a PDF to explore fonts</p>
+                    </div>
+                </div>
+            </aside>
+        </div>
+    </section>
+
+    <!-- ffg -->
+    <!-- Feedback Section -->
+    <div id="feedback-section" class="css-card feedback-card" style="display:none; margin-top: 24px;">
+        <div class="feedback-header">
+            <div class="feedback-icon">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+            </div>
+            <div>
+                <h3 class="feedback-title">How was your validation experience?</h3>
+                <p class="feedback-subtitle">Rate your satisfaction with the QC validation results</p>
+            </div>
+        </div>
+        <div class="feedback-body">
+            <div class="star-rating" id="feedback-stars">
+                <span class="star" data-value="1">&#9733;</span>
+                <span class="star" data-value="2">&#9733;</span>
+                <span class="star" data-value="3">&#9733;</span>
+                <span class="star" data-value="4">&#9733;</span>
+                <span class="star" data-value="5">&#9733;</span>
+            </div>
+            <textarea id="feedback-comment" class="feedback-comment" placeholder="Any additional feedback? (optional)" rows="3"></textarea>
+            <div class="feedback-actions">
+                <button id="feedback-submit-btn" class="btn-feedback btn-feedback-primary">Submit</button>
+                <button id="feedback-skip-btn" class="btn-feedback btn-feedback-ghost">Skip</button>
+            </div>
+            <div id="feedback-thanks" class="feedback-thanks" style="display:none;">
+                <div class="feedback-thanks-icon">
+                    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                </div>
+                <p class="feedback-thanks-text">Thank you for your feedback!</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Upload History Section -->
+    <div id="upload-history-section" class="css-card" style="display:none; margin-top: 24px;">
+        <div class="section-header" style="display:flex;align-items:center;justify-content:space-between;">
+            <span style="display:flex;align-items:center;gap:10px;">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#2B318D" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                My Upload History
+            </span>
+            <span id="upload-history-count" class="badge-count" style="background:linear-gradient(135deg,#eef2ff,#e0e7ff);color:#2B318D;padding:2px 12px;border-radius:20px;font-size:0.8rem;font-weight:700;">0</span>
+        </div>
+        <div class="admin-table-wrap" style="border-radius:12px;border:1px solid #e2e8f0;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,0.04);">
+            <table class="admin-table" style="width:100%;border-collapse:collapse;font-size:0.85rem;">
+                <thead>
+                    <tr style="background:linear-gradient(135deg,#f8fafc,#f1f5f9);">
+                        <th style="padding:12px 14px;font-weight:600;color:#475569;font-size:0.75rem;text-transform:uppercase;letter-spacing:0.05em;border-bottom:2px solid #e2e8f0;white-space:nowrap;text-align:left;">File Name</th>
+                        <th style="padding:12px 14px;font-weight:600;color:#475569;font-size:0.75rem;text-transform:uppercase;letter-spacing:0.05em;border-bottom:2px solid #e2e8f0;white-space:nowrap;text-align:left;">Status</th>
+                        <th style="padding:12px 14px;font-weight:600;color:#475569;font-size:0.75rem;text-transform:uppercase;letter-spacing:0.05em;border-bottom:2px solid #e2e8f0;white-space:nowrap;text-align:left;">Brand</th>
+                        <th style="padding:12px 14px;font-weight:600;color:#475569;font-size:0.75rem;text-transform:uppercase;letter-spacing:0.05em;border-bottom:2px solid #e2e8f0;white-space:nowrap;text-align:left;">Uploaded At</th>
+                    </tr>
+                </thead>
+                <tbody id="upload-history-body">
+                    <tr><td colspan="4" style="text-align:center;padding:40px 16px;color:#94a3b8;font-style:italic;">No uploads found</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+
+    </div> <!-- End of #qc-tool-view -->
+
+    <!-- Activity & Review History View (Tab 2) -->
+    <div id="history-view" class="app-tab-panel css-card" style="display:none; margin-top:24px;">
+        <div class="section-header" style="display:flex; justify-content:space-between; align-items:center;">
+            <span style="display:flex; align-items:center; gap:10px;">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#2B318D" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                Activity & Review History
+            </span>
+            <button id="refresh-history-btn" class="btn btn-sm btn-outline" style="display:flex;align-items:center;gap:6px;padding:6px 14px;border:1px solid #cbd5e1;background:#fff;border-radius:8px;cursor:pointer;font-weight:600;color:#2B318D;">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
+                Refresh
+            </button>
+        </div>
+        <p style="font-size:0.875rem; color:#64748b; margin-top:4px;">Persisted log of your uploads, validation reviews, ignored/restored errors, custom dictionary changes, and report downloads.</p>
+        
+        <div class="history-controls-row" style="display:flex; gap:12px; margin: 16px 0; flex-wrap:wrap;">
+            <input type="text" id="history-search-input" class="input-field" placeholder="Search by document name or action..." style="flex:1; min-width:240px; padding:10px 14px; border-radius:10px; border:1px solid #cbd5e1;">
+            <select id="history-action-filter" class="input-field" style="width:220px; padding:10px 14px; border-radius:10px; border:1px solid #cbd5e1;">
+                <option value="">All Activities</option>
+                <option value="upload">Uploads</option>
+                <option value="review">Reviews & Validations</option>
+                <option value="ignore_error">Ignored Errors</option>
+                <option value="restore_error">Restored Errors</option>
+                <option value="add_dictionary">Dictionary Additions</option>
+                <option value="remove_dictionary">Dictionary Deletions</option>
+                <option value="download_report">Report Downloads</option>
+            </select>
+        </div>
+
+        <div class="admin-table-wrap">
+            <table class="admin-table">
+                <thead>
+                    <tr>
+                        <th style="width:180px;">Date & Time</th>
+                        <th style="width:160px;">Action</th>
+                        <th style="width:240px;">Document / Context</th>
+                        <th>Details</th>
+                    </tr>
+                </thead>
+                <tbody id="history-table-body">
+                    <tr><td colspan="4" class="table-empty">No activity records found yet.</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Personal Dictionary View (Tab 3) -->
+    <div id="dictionary-view" class="app-tab-panel css-card" style="display:none; margin-top:24px;">
+        <div class="section-header" style="display:flex; justify-content:space-between; align-items:center;">
+            <span style="display:flex; align-items:center; gap:10px;">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#2B318D" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+                My Personal Dictionary
+            </span>
+            <span id="dictionary-count-badge" class="badge-count" style="background:#eef2ff; color:#2B318D; padding:4px 14px; border-radius:20px; font-weight:700; font-size:0.85rem;">0 words</span>
+        </div>
+        <p style="font-size:0.875rem; color:#64748b; margin-top:4px;">Words saved to your dictionary are permanently excluded from spelling checks on all your future document uploads. They remain completely private to your account.</p>
+        
+        <div class="dict-add-box" style="display:flex; gap:12px; margin: 20px 0;">
+            <input type="text" id="dict-add-input" class="input-field" placeholder="Enter new word to add to your dictionary..." style="flex:1; padding:10px 14px; border-radius:10px; border:1px solid #cbd5e1;">
+            <button id="dict-add-btn" class="btn btn-primary" style="white-space:nowrap; padding:10px 20px; font-weight:600; background:linear-gradient(135deg,#2B318D,#3b40a0); color:#fff; border:none; border-radius:10px; cursor:pointer;">+ Add Word</button>
+        </div>
+
+        <div style="margin-bottom:14px;">
+            <input type="text" id="dict-search-input" class="input-field" placeholder="Filter your dictionary words..." style="width:100%; padding:10px 14px; border-radius:10px; border:1px solid #cbd5e1;">
+        </div>
+
+        <div class="admin-table-wrap">
+            <table class="admin-table">
+                <thead>
+                    <tr>
+                        <th>Approved Word</th>
+                        <th style="width:200px;">Date Added</th>
+                        <th style="text-align:right; width:120px;">Action</th>
+                    </tr>
+                </thead>
+                <tbody id="dictionary-table-body">
+                    <tr><td colspan="3" class="table-empty">Loading dictionary...</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Modal Dialogs -->
+    <!-- Approve Word Modal -->
+    <div id="approve-word-modal" class="modal" style="display:none;">
+        <div class="modal-content">
+            <h3>Add to Dictionary</h3>
+            <p id="approve-word-text">Add "<span id="approve-word-name"></span>" to approved dictionary?</p>
+            <p class="modal-help-text">This will prevent it from being flagged as a spelling error in future
+                validations.</p>
+            <div class="modal-buttons">
+                <button id="approve-word-yes-btn" class="btn btn-primary">Add to Dictionary</button>
+                <button id="approve-word-no-btn" class="btn btn-secondary">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Approve All Words Modal -->
+    <div id="approve-all-modal" class="modal" style="display:none;">
+        <div class="modal-content">
+            <h3>Add Multiple Words</h3>
+            <p id="approve-all-text">Add <span id="approve-all-count"></span> word(s) to approved dictionary?</p>
+            <p id="approve-all-words" class="modal-words-list"></p>
+            <p class="modal-help-text">This will prevent them from being flagged in future validations.</p>
+            <div class="modal-buttons">
+                <button id="approve-all-yes-btn" class="btn btn-primary">Add All to Dictionary</button>
+                <button id="approve-all-no-btn" class="btn btn-secondary">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Auth protection and session management -->
+    <script type="module">
+        import { getStoredUser, isAuthenticated, isAdmin, signOut, refreshSession } from './js/auth.js';
+
+        if (!isAuthenticated()) {
+            window.location.replace('index.html');
+        } else {
+            const user = getStoredUser();
+            const nav = document.getElementById('auth-header-nav');
+            const badge = document.getElementById('auth-user-badge');
+            if (nav && badge) {
+                const name = [user.first_name, user.last_name].filter(Boolean).join(' ');
+                badge.textContent = name ? `${name}` : user.email || 'User';
+                if (user.role === 'ADMIN') {
+                    badge.innerHTML = `${name || user.email} <a href="admin.html" style="color:#2b318d;text-decoration:underline;margin-left:4px;">(Admin)</a>`;
+                }
+                nav.style.display = 'flex';
+            }
+
+            // refreshSession returns the new session object or null on failure.
+            // Only redirect if null (token could not be refreshed).
+            refreshSession().then((session) => {
+                if (session === null) {
+                    window.location.replace('index.html');
+                }
+            }).catch(() => {
+                // Network error during refresh — keep the user on the page,
+                // the stored session may still be valid.
+            });
+
+            document.getElementById('header-logout-btn')?.addEventListener('click', async () => {
+                await signOut();
+                window.location.replace('index.html');
+            });
+        }
+
+    </script>
+
+    <!-- Load main application scripts -->
+    <script type="module" src="js/main.js?v=20260723_v2"></script>
+</body>
+
+</html>

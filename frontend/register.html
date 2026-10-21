@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register - QualiLabs QC Tool</title>
+    <link rel="icon" href="data:,">
+    <link rel="stylesheet" href="css/main.css?v=20260713">
+    <link rel="stylesheet" href="css/theme.css?v=20260713">
+    <link rel="stylesheet" href="css/auth.css?v=20260713">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <script src="runtime-config.js?v=20260721"></script>
+</head>
+<body class="auth-page">
+    <div class="auth-background" aria-hidden="true">
+        <div class="auth-bg-gradient"></div>
+        <div class="auth-bg-blob"></div>
+        <div class="auth-bg-blob"></div>
+        <div class="auth-bg-blob"></div>
+        <div class="auth-bg-pattern"></div>
+    </div>
+
+    <header class="auth-header" role="banner">
+        <div class="auth-header-content">
+            <a href="index.html" class="auth-logo" aria-label="QualiLabs QC Tool Home">
+                <img src="logo/dark-logo.svg" alt="" class="auth-logo-img">
+            </a>
+        </div>
+    </header>
+
+    <main class="auth-main" role="main">
+        <div class="auth-layout">
+            <div class="auth-brand-side" aria-hidden="true">
+                <div class="auth-brand-content">
+                    <div class="auth-brand-badge">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                            <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+                        </svg>
+                    </div>
+                    <h1 class="auth-brand-title">Create your account</h1>
+                    <p class="auth-brand-tagline">Join QualiLabs QC Tool and start validating documents with confidence. Free to get started.</p>
+                    <ul class="auth-brand-features" aria-label="Key features">
+                        <li>
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+                            <span>Automated PDF validation</span>
+                        </li>
+                        <li>
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+                            <span>Spelling & grammar checks</span>
+                        </li>
+                        <li>
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+                            <span>Design compliance</span>
+                        </li>
+                        <li>
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+                            <span>Brand guidelines</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="auth-form-side">
+                <div class="auth-form-card">
+                    <div class="auth-form-header">
+                        <h2>Create Account</h2>
+                        <p>Enter your details to get started</p>
+                    </div>
+
+                    <div id="auth-error" class="auth-error" style="display:none;"></div>
+
+                    <form id="register-form" class="auth-form" novalidate>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="first_name">First Name</label>
+                                    <div class="input-wrapper">
+                                        <input type="text" id="first_name" class="input-field" placeholder="John" required autocomplete="given-name">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="last_name">Last Name</label>
+                                    <div class="input-wrapper">
+                                        <input type="text" id="last_name" class="input-field" placeholder="Doe" required autocomplete="family-name">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="email">Email Address</label>
+                                <div class="input-wrapper">
+                                    <input type="email" id="email" class="input-field" placeholder="you@example.com" required autocomplete="email">
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="organization">Organization</label>
+                                <div class="input-wrapper">
+                                    <select id="organization" class="input-field" required autocomplete="organization">
+                                        <option value="">Select organization</option>
+                                        <option value="Ethosh">Ethosh</option>
+                                        <option value="Biorad Medisys">Biorad Medisys</option>
+                                        <option value="Other">Other</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group" id="other-org-group" style="display:none;">
+                                <label for="other_organization">Specify Organization</label>
+                                <div class="input-wrapper">
+                                    <input type="text" id="other_organization" class="input-field" placeholder="Enter your organization name" autocomplete="organization">
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="password">Password</label>
+                                <div class="input-wrapper has-icon">
+                                    <input type="password" id="password" class="input-field" placeholder="At least 8 characters" required autocomplete="new-password" minlength="8">
+                                    <button type="button" class="toggle-password" aria-label="Toggle password visibility">
+                                        <svg class="icon-eye" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                                        <svg class="icon-eye-off" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
+                                    </button>
+                                </div>
+                                <div class="password-strength" aria-live="polite">
+                                    <div class="password-strength-bar">
+                                        <div class="password-strength-fill"></div>
+                                    </div>
+                                    <div class="password-strength-text">Password strength</div>
+                                </div>
+                                <div class="password-requirements" aria-hidden="true">
+                                    <div class="password-req" data-req="length"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg><span>At least 8 characters</span></div>
+                                    <div class="password-req" data-req="uppercase"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg><span>One uppercase letter</span></div>
+                                    <div class="password-req" data-req="lowercase"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg><span>One lowercase letter</span></div>
+                                    <div class="password-req" data-req="number"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg><span>One number</span></div>
+                                    <div class="password-req" data-req="special"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg><span>One special character</span></div>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="confirm_password">Confirm Password</label>
+                                <div class="input-wrapper has-icon">
+                                    <input type="password" id="confirm_password" class="input-field" placeholder="Repeat your password" required autocomplete="new-password">
+                                    <button type="button" class="toggle-password" aria-label="Toggle password visibility">
+                                        <svg class="icon-eye" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                                        <svg class="icon-eye-off" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <button type="submit" id="register-btn" class="btn btn-primary auth-submit-btn">
+                                <span class="btn-text">Create Account</span>
+                                <span class="btn-loader" style="display:none;">
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <circle cx="12" cy="12" r="10" stroke-dasharray="31.4 31.4" stroke-linecap="round">
+                                            <animateTransform attributeName="transform" type="rotate" from="0 12 12" to="360 12 12" dur="1s" repeatCount="indefinite"/>
+                                        </circle>
+                                    </svg>
+                                </span>
+                            </button>
+                        </form>
+
+                    <div class="auth-footer">
+                        <p>Already have an account? <a href="index.html">Sign in</a></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <div id="toast-container" class="toast-container" aria-live="polite" aria-label="Notifications"></div>
+
+    <script type="module">
+        import { registerWithProfile, isAuthenticated } from './js/auth.js';
+
+        if (isAuthenticated()) {
+            window.location.replace('app.html');
+        }
+
+        const form = document.getElementById('register-form');
+        const errorEl = document.getElementById('auth-error');
+        const submitBtn = document.getElementById('register-btn');
+        const btnText = submitBtn.querySelector('.btn-text');
+        const btnLoader = submitBtn.querySelector('.btn-loader');
+
+        const orgSelect = document.getElementById('organization');
+        const otherOrgGroup = document.getElementById('other-org-group');
+        const otherOrgInput = document.getElementById('other_organization');
+
+        orgSelect.addEventListener('change', () => {
+            if (orgSelect.value === 'Other') {
+                otherOrgGroup.style.display = 'block';
+                otherOrgInput.setAttribute('required', '');
+            } else {
+                otherOrgGroup.style.display = 'none';
+                otherOrgInput.removeAttribute('required');
+            }
+        });
+
+        const passwordInput = document.getElementById('password');
+        const confirmInput = document.getElementById('confirm_password');
+        const strengthFill = document.querySelector('.password-strength-fill');
+        const strengthText = document.querySelector('.password-strength-text');
+        const requirements = document.querySelectorAll('.password-req');
+
+        function checkPasswordStrength(password) {
+            const checks = {
+                length: password.length >= 8,
+                uppercase: /[A-Z]/.test(password),
+                lowercase: /[a-z]/.test(password),
+                number: /[0-9]/.test(password),
+                special: /[^A-Za-z0-9]/.test(password)
+            };
+
+            requirements.forEach(req => {
+                const key = req.dataset.req;
+                if (checks[key]) {
+                    req.classList.add('met');
+                } else {
+                    req.classList.remove('met');
+                }
+            });
+
+            let score = Object.values(checks).filter(Boolean).length;
+            strengthFill.className = 'password-strength-fill';
+            if (score <= 2) {
+                strengthFill.classList.add('weak');
+                strengthText.textContent = 'Weak password';
+                strengthText.className = 'password-strength-text weak';
+            } else if (score <= 3) {
+                strengthFill.classList.add('fair');
+                strengthText.textContent = 'Fair password';
+                strengthText.className = 'password-strength-text fair';
+            } else {
+                strengthFill.classList.add('good');
+                strengthText.textContent = 'Strong password';
+                strengthText.className = 'password-strength-text good';
+            }
+        }
+
+        passwordInput.addEventListener('input', () => {
+            checkPasswordStrength(passwordInput.value);
+            validatePasswordMatch();
+        });
+
+        function validatePasswordMatch() {
+            if (confirmInput.value && passwordInput.value !== confirmInput.value) {
+                confirmInput.classList.add('error');
+                showError(confirmInput, 'Passwords do not match');
+            } else {
+                confirmInput.classList.remove('error');
+                hideError(confirmInput);
+            }
+        }
+
+        confirmInput.addEventListener('input', validatePasswordMatch);
+
+        function showError(input, message) {
+            let errorEl = input.closest('.form-group').querySelector('.input-error');
+            if (!errorEl) {
+                errorEl = document.createElement('div');
+                errorEl.className = 'input-error';
+                input.parentNode.after(errorEl);
+            }
+            errorEl.textContent = message;
+            errorEl.classList.add('visible');
+            input.classList.add('error');
+        }
+
+        function hideError(input) {
+            const errorEl = input.closest('.form-group').querySelector('.input-error');
+            if (errorEl) {
+                errorEl.classList.remove('visible');
+            }
+            input.classList.remove('error');
+        }
+
+        document.querySelectorAll('.toggle-password').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const input = btn.parentNode.querySelector('input');
+                const type = input.type === 'password' ? 'text' : 'password';
+                input.type = type;
+                btn.querySelector('.icon-eye').style.display = type === 'password' ? 'block' : 'none';
+                btn.querySelector('.icon-eye-off').style.display = type === 'password' ? 'none' : 'block';
+            });
+        });
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            errorEl.style.display = 'none';
+
+            const first_name = document.getElementById('first_name').value.trim();
+            const last_name = document.getElementById('last_name').value.trim();
+            const email = document.getElementById('email').value.trim();
+            const orgValue = document.getElementById('organization').value;
+            const organization = orgValue === 'Other' ? document.getElementById('other_organization').value.trim() : orgValue;
+            const password = document.getElementById('password').value;
+            const confirm_password = document.getElementById('confirm_password').value;
+
+            if (!first_name || !last_name || !email || !organization || !password || !confirm_password) {
+                showAuthError('Please fill in all fields');
+                return;
+            }
+
+            if (password !== confirm_password) {
+                showAuthError('Passwords do not match');
+                confirmInput.classList.add('error');
+                return;
+            }
+
+            if (password.length < 8) {
+                showAuthError('Password must be at least 8 characters');
+                passwordInput.classList.add('error');
+                return;
+            }
+
+            submitBtn.disabled = true;
+            btnText.style.display = 'none';
+            btnLoader.style.display = 'inline-flex';
+
+            try {
+                await registerWithProfile({ first_name, last_name, email, password, confirm_password, organization });
+                showToast('success', 'Account created!', 'Welcome to QualiLabs QC Tool. Redirecting...');
+                setTimeout(() => window.location.replace('index.html'), 1500);
+            } catch (err) {
+                showAuthError(err.message || 'Registration failed. Please try again.');
+                submitBtn.disabled = false;
+                btnText.style.display = 'inline';
+                btnLoader.style.display = 'none';
+            }
+        });
+
+        function showAuthError(message) {
+            errorEl.textContent = message;
+            errorEl.style.display = 'flex';
+        }
+
+        function showToast(type, title, message) {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+            const icons = {
+                success: '<polyline points="20 6 9 17 4 12"/>',
+                error: '<circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/>',
+                warning: '<circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/>',
+                info: '<circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/>'
+            };
+            toast.innerHTML = `
+                <svg class="toast-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${icons[type]}</svg>
+                <div class="toast-content">
+                    <div class="toast-title">${title}</div>
+                    <div class="toast-message">${message}</div>
+                </div>
+                <button class="toast-close" aria-label="Dismiss"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+            `;
+            container.appendChild(toast);
+            toast.querySelector('.toast-close').addEventListener('click', () => removeToast(toast));
+            setTimeout(() => removeToast(toast), 5000);
+        }
+
+        function removeToast(toast) {
+            toast.classList.add('removing');
+            toast.addEventListener('animationend', () => toast.remove());
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            document.body.classList.add('loaded');
+            document.getElementById('first_name').focus();
+        });
+    </script>
+</body>
+</html>
